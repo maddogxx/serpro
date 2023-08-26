@@ -9,8 +9,8 @@ router.get('/users/:email', async (req, res) => {
     const { email } = req.params;
 
     try {
-        // TODO
-        const selectedUser = {};
+        const { dataValues } = await UserController.findByEmail(email);
+        const selectedUser = { ...dataValues };
 
         if (!selectedUser) {
             throw new Error();
@@ -33,11 +33,12 @@ router.post('/users', userCreationAdapter, async (req, res) => {
     const encryptedUser = req.encryptedUser;
 
     try {
-        // TODO
-
         if(!encryptedUser) throw new Error();
 
-        return res.status(201).json({});
+        const { dataValues } = await UserController.createUser(encryptedUser);
+        const createdUser = { ...dataValues }
+
+        return res.status(201).json(createdUser);
     } catch (error) {
         console.log(error);
         return res.status(400).end();
